@@ -1,87 +1,98 @@
 <?php include 'app/views/shares/header.php'; ?>
 
 <div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8 col-lg-6">
-            <div class="card shadow-sm rounded-3">
-                <div class="card-header bg-primary text-white text-center">
-                    <h1 class="mb-0">Thêm sản phẩm mới</h1>
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h1 class="h4 mb-0">Thêm sản phẩm mới</h1>
+        </div>
+        <div class="card-body">
+            <!-- Error Messages (if any) -->
+            <?php if (!empty($errors)): ?>
+                <div class="alert alert-danger" role="alert">
+                    <ul class="mb-0">
+                        <?php foreach ($errors as $error): ?>
+                            <li><?php echo htmlspecialchars($error, ENT_QUOTES, 'UTF-8'); ?></li>
+                        <?php endforeach; ?>
+                    </ul>
                 </div>
-                <div class="card-body">
-                    <?php if (!empty($errors)): ?>
-                        <div class="alert alert-danger">
-                            <ul class="mb-0">
-                                <?php foreach ($errors as $error): ?>
-                                    <li><?php echo htmlspecialchars($error, ENT_QUOTES, 'UTF-8'); ?></li>
-                                <?php endforeach; ?>
-                            </ul>
-                        </div>
-                    <?php endif; ?>
+            <?php endif; ?>
 
-                    <form method="POST" action="/webbanhang1/Product/save" enctype="multipart/form-data" onsubmit="return validateForm();">
-                        <div class="form-group mb-3">
-                            <label for="name" class="form-label">Tên sản phẩm:</label>
-                            <input type="text" id="name" name="name" class="form-control" required>
-                        </div>
-
-                        <div class="form-group mb-3">
-                            <label for="description" class="form-label">Mô tả:</label>
-                            <textarea id="description" name="description" class="form-control" required></textarea>
-                        </div>
-
-                        <div class="form-group mb-3">
-                            <label for="price" class="form-lab  l>
-                            <input type="number" id="price" name="price" class="form-control" step="0.01" required>
-                        </div>
-
-                        <div class="form-group mb-3">
-                            <label for="category_id" class="form-label">Danh mục:</label>
-                            <select id="category_id" name="category_id" class="form-control" required>
-                                <?php foreach ($categories as $category): ?>
-                                    <option value="<?php echo $category->id; ?>"><?php echo htmlspecialchars($category->name, ENT_QUOTES, 'UTF-8'); ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-
-                        <div class="form-group mb-4">
-                            <label for="image" class="form-label">Hình ảnh:</label>
-                            <input type="file" id="image" name="image" class="form-control">
-                        </div>
-
-                        <div class="d-flex gap-2 justify-content-center">
-                            <button type="submit" class="btn btn-primary btn-lg">Thêm sản phẩm</button>
-                            <a href="/webbanhang1/Product/list" class="btn btn-secondary btn-lg">Quay lại danh sách sản phẩm</a>
-                        </div>
-                    </form>
+            <!-- Form -->
+            <form method="POST" action="/webbanhang1/Product/add" enctype="multipart/form-data" onsubmit="return validateForm();">
+                <!-- Product Name -->
+                <div class="form-group mb-4">
+                    <label for="name" class="form-label font-weight-bold">Tên sản phẩm <span class="text-danger">*</span></label>
+                    <input type="text" id="name" name="name" class="form-control" value="<?php echo isset($product->name) ? htmlspecialchars($product->name, ENT_QUOTES, 'UTF-8') : ''; ?>" required>
                 </div>
-            </div>
+
+                <!-- Description -->
+                <div class="form-group mb-4">
+                    <label for="description" class="form-label font-weight-bold">Mô tả <span class="text-danger">*</span></label>
+                    <textarea id="description" name="description" class="form-control" rows="5" required><?php echo isset($product->description) ? htmlspecialchars($product->description, ENT_QUOTES, 'UTF-8') : ''; ?></textarea>
+                </div>
+
+                <!-- Price -->
+                <div class="form-group mb-4">
+                    <label for="price" class="form-label font-weight-bold">Giá <span class="text-danger">*</span></label>
+                    <input type="number" id="price" name="price" class="form-control" step="0.01" value="<?php echo isset($product->price) ? htmlspecialchars($product->price, ENT_QUOTES, 'UTF-8') : ''; ?>" required>
+                </div>
+
+                <!-- Category -->
+                <div class="form-group mb-4">
+                    <label for="category_id" class="form-label font-weight-bold">Danh mục <span class="text-danger">*</span></label>
+                    <select id="category_id" name="category_id" class="form-control" required>
+                        <option value="" disabled selected>Chọn danh mục</option>
+                        <?php foreach ($categories as $category): ?>
+                            <option value="<?php echo htmlspecialchars($category->id, ENT_QUOTES, 'UTF-8'); ?>">
+                                <?php echo htmlspecialchars($category->name, ENT_QUOTES, 'UTF-8'); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
+                <!-- Image Upload -->
+                <div class="form-group mb-4">
+                    <label for="image" class="form-label font-weight-bold">Hình ảnh</label>
+                    <div class="custom-file mb-2">
+                        <input type="file" id="image" name="image" class="custom-file-input" onchange="previewImage(event)">
+                        <label class="custom-file-label" for="image">Chọn tệp</label>
+                    </div>
+                    <!-- Image Preview -->
+                    <div id="imagePreview" class="mt-2"></div>
+                </div>
+
+                <!-- Buttons -->
+                <div class="d-flex justify-content-between align-items-center">
+                    <button type="submit" class="btn btn-primary px-4">Thêm sản phẩm</button>
+                    <div>
+                        <!-- New "Thêm Danh Mục" Button -->
+                        <a href="/webbanhang1/Category/add" class="btn btn-outline-success px-4 mr-2">Thêm Danh Mục</a>
+                        <a href="/webbanhang1/Product" class="btn btn-outline-secondary px-4">Quay lại danh sách sản phẩm</a>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>
 
-<?php include 'app/views/shares/footer.php'; ?>
+<!-- JavaScript for Image Preview -->
+<script>
+function previewImage(event) {
+    const preview = document.getElementById('imagePreview');
+    preview.innerHTML = '';
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            img.className = 'img-thumbnail';
+            img.style.maxWidth = '150px';
+            preview.appendChild(img);
+        };
+        reader.readAsDataURL(file);
+    }
+}
+</script>
 
-<style>
-    .card {
-        transition: all 0.3s ease;
-    }
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    }
-    .form-control {
-        border-radius: 0.5rem;
-    }
-    .btn-lg {
-        min-width: 150px;
-        text-align: center;
-    }
-    @media (max-width: 768px) {
-        .d-flex {
-            flex-direction: column;
-        }
-        .btn-lg {
-            width: 100%;
-        }
-    }
-</style>
+<?php include 'app/views/shares/footer.php'; ?>
