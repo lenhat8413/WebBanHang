@@ -1,7 +1,7 @@
 <?php
 // Require các file cần thiết
 require_once 'app/config/database.php';
-require_once 'app/models/CategoryModels.php';
+require_once 'app/models/CategoryModel.php';
 
 class CategoryController
 {
@@ -27,22 +27,21 @@ class CategoryController
     }
 
     // Thêm danh mục
-    public function add() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    public function add()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $name = trim($_POST['name']);
+            $description = trim($_POST['description']);
+
             if (!empty($name)) {
-                if ($this->categoryModel->addCategory($name)) {
-                    header('Location: /webbanhang/category/list');
-                    exit;
-                } else {
-                    $error = "Lỗi khi thêm danh mục!";
-                }
-            } else {
-                $error = "Tên danh mục không được để trống!";
+                $this->categoryModel->addCategory($name, $description);
+                header("Location: /webbanhang/Category/list");
+                exit();
             }
         }
         include 'app/views/category/add.php';
     }
+
     // Chỉnh sửa danh mục
     public function edit($id)
     {
@@ -50,12 +49,12 @@ class CategoryController
         if (!$category) {
             die("Danh mục không tồn tại.");
         }
-        
-        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $name = trim($_POST['name']);
             $description = trim($_POST['description']);
 
-            if (!empty($name) && !empty($description)) {
+            if (!empty($name)) {
                 $this->categoryModel->updateCategory($id, $name, $description);
                 header("Location: /webbanhang/Category/list");
                 exit();
@@ -67,11 +66,14 @@ class CategoryController
     // Xóa danh mục
     public function delete($id)
     {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $this->categoryModel->deleteCategory($id);
-            header("Location: /webbanhang/Category/list");
-            exit();
+        $category = $this->categoryModel->getCategoryById($id);
+        if (!$category) {
+            die("Danh mục không tồn tại.");
         }
+
+        $this->categoryModel->deleteCategory($id);
+        header("Location: /webbanhang/Category/list");
+        exit();
     }
 }
 ?>
