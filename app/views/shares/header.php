@@ -84,4 +84,5 @@ $isAdmin = isset($_SESSION['role']) && $_SESSION['role'] === 'admin';
         </div>
     </nav>
 </body>
+
 </html>
