@@ -78,14 +78,14 @@ class AccountController {
                 if (password_verify($password, $pwd_hashed)) {
                     session_start();
                     $_SESSION['username'] = $account->username;
+                    $_SESSION['role'] = $account->role; // Lưu role vào session
+            
                     header('Location: /webbanhang1/product');
                     exit;
                 } else {
                     echo "Mật khẩu không chính xác.";
                 }
-            } else {
-                echo "Báo lỗi: Không tìm thấy tài khoản.";
-            }
+            }    
         }
     }
 }

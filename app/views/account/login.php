@@ -1,93 +1,5 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đăng nhập</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-    body {
-        background: url('https://source.unsplash.com/1920x1080/?technology,machinery') no-repeat center center fixed;
-        background-size: cover;
-    }
+<?php include 'app/views/shares/header.php'; ?>
 
-    .navbar-custom {
-        background: #4682B4; /* Màu xanh nước biển */
-        padding: 15px 0;
-    }
-
-    .navbar-brand {
-        font-size: 2rem;
-        font-weight: bold;
-        color: white !important;
-        text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
-    }
-
-    .navbar-nav {
-        display: flex;
-        justify-content: center;
-        width: 100%;
-    }
-
-    .navbar-nav .nav-item {
-        text-align: center;
-        flex-grow: 1;
-    }
-
-    .navbar-nav .nav-link {
-        font-size: 1.2rem;
-        color: white !important;
-        transition: 0.3s;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-    }
-
-    .navbar-nav .nav-link:hover, 
-    .navbar-nav .nav-link.active {
-        color: #ADD8E6 !important; /* Màu xanh nhạt */
-        text-shadow: 0 0 8px #ADD8E6, 0 0 12px #ADD8E6;
-    }
-
-    .text-blue {
-        color: #4682B4;
-    }
-
-    .btn-blue {
-        background-color: #4682B4;
-        border-color: #4682B4;
-        color: white;
-    }
-    .btn-blue:hover {
-        background-color: #3A6D8C;
-        border-color: #3A6D8C;
-        color: white;
-    }
-
-    .card {
-        box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
-        background: rgba(255, 255, 255, 0.9);
-        border-radius: 1rem;
-    }
-
-    .form-label {
-        font-weight: 500;
-    }
-
-    .form-control {
-        background-color: #f8f9fa;
-        border: 1px solid #ced4da;
-    }
-
-    .form-control:focus {
-        background-color: #fff;
-        border-color: #4682B4;
-        box-shadow: 0 0 5px rgba(70, 130, 180, 0.5);
-    }
-
-    .text-muted {
-        font-size: 0.9rem;
-    }
-    </style>
-</head>
 <body>
     <?php $current_page = $_SERVER['REQUEST_URI']; ?>
 
@@ -159,4 +71,5 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+<?php include 'app/views/shares/footer.php'; ?>
 </html>

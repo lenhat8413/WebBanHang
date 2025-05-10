@@ -67,6 +67,7 @@
                     <div>
                         <!-- New "Thêm Danh Mục" Button -->
                         <a href="/webbanhang1/Category/add" class="btn btn-outline-success px-4 mr-2">Thêm Danh Mục</a>
+                        <a href="/webbanhang1/Category/list" class="btn btn-outline-primary px-4">Danh sách danh mục</a>
                         <a href="/webbanhang1/Product" class="btn btn-outline-secondary px-4">Quay lại danh sách sản phẩm</a>
                     </div>
                 </div>

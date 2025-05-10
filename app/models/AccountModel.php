@@ -17,23 +17,24 @@ public function getAccountByUsername($username)
         return $result; 
     } 
  
-    function save($username, $name, $password) {
-        $query = "INSERT INTO " . $this->table_name . " (username, password) 
-                  VALUES (:username, :password)";
+    function save($username, $fullname, $password) {
+        $query = "INSERT INTO " . $this->table_name . " (username, fullname, password) 
+                  VALUES (:username, :fullname, :password)";
         
         $stmt = $this->conn->prepare($query);
     
         // Làm sạch dữ liệu
         $username = htmlspecialchars(strip_tags($username));
-        
+        $fullname = htmlspecialchars(strip_tags($fullname));
+        $password = htmlspecialchars(strip_tags($password));
+    
         // Gán dữ liệu
         $stmt->bindParam(':username', $username);
+        $stmt->bindParam(':fullname', $fullname);
         $stmt->bindParam(':password', $password);
     
         // Thực thi câu lệnh
-        if ($stmt->execute()) {
-            return true;
-        }
-        return false;
+        return $stmt->execute();
     }
+    
 } 

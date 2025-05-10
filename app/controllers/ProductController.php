@@ -11,8 +11,19 @@ class ProductController
 
     public function __construct()
     {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }        
         $this->db = (new Database())->getConnection();
         $this->productModel = new ProductModel($this->db);
+    }
+
+    // Hàm kiểm tra quyền admin
+    private function checkAdmin()
+    {
+        if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+            die("Bạn không có quyền thực hiện thao tác này!");
+        }
     }
 
     public function index()
@@ -33,12 +44,15 @@ class ProductController
 
     public function add()
     {
+        $this->checkAdmin(); // Kiểm tra quyền admin
         $categories = (new CategoryModel($this->db))->getCategories();
         include 'app/views/product/add.php';
     }
 
     public function save()
     {
+        $this->checkAdmin(); // Kiểm tra quyền admin
+
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $name = $_POST['name'] ?? '';
             $description = $_POST['description'] ?? '';
@@ -64,6 +78,7 @@ class ProductController
 
     public function edit($id)
     {
+        $this->checkAdmin(); // Kiểm tra quyền admin
         $product = $this->productModel->getProductById($id);
         $categories = (new CategoryModel($this->db))->getCategories();
         if ($product) {
@@ -75,6 +90,8 @@ class ProductController
 
     public function update()
     {
+        $this->checkAdmin(); // Kiểm tra quyền admin
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $id = $_POST['id'];
             $name = $_POST['name'];
@@ -97,6 +114,8 @@ class ProductController
 
     public function delete($id)
     {
+        $this->checkAdmin(); // Kiểm tra quyền admin
+
         if ($this->productModel->deleteProduct($id)) {
             header('Location: /webbanhang1/Product');
             exit();
@@ -159,21 +178,21 @@ class ProductController
         $cart = $_SESSION['cart'] ?? [];
         include 'app/views/product/cart.php';
     }
-// removeFromCart
+
     public function removeFromCart($id)
     {
         if (isset($_SESSION['cart'][$id])) {
             unset($_SESSION['cart'][$id]);
         }
-        
+
         header('Location: /webbanhang1/Product/cart');
         exit();
     }
+
     public function checkout()
     {
         include 'app/views/product/checkout.php';
     }
-    
 
     public function processCheckout()
     {
@@ -208,9 +227,10 @@ class ProductController
             }
         }
     }
+
     public function orderConfirmation() 
-        { 
+    { 
         include 'app/views/product/orderConfirmation.php'; 
-        }
-} 
+    }
+}
 ?>
